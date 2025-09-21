@@ -11,21 +11,22 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.asteroids.Asteroids;
+import io.asteroids.models.Asteroid;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     private float worldWidth;
     private float worldHeight;
+    private float asteroidTimer;
+    private final float ASTEROID_SPAWNRATE = 5f;
+    private ArrayList<Asteroid> asteroids;
+    private final float SHIP_SPEED = 4f;
+    private final float ASTEROID_SPEED = 2f;
+    private final float ROTATION_SPEED = 4f;
+    TextureAtlas atlas;
     Texture background;
     Sprite ship;
-    Sprite asteroidBig_1;
-    Sprite asteroidBig_2;
-    Sprite asteroidBig_3;
-    Sprite asteroidMid_2;
-    Sprite asteroidMid_1;
-    Sprite asteroidMid_3;
-    Sprite asteroidSmall_1;
-    Sprite asteroidSmall_2;
-    Sprite asteroidSmall_3;
     Sprite bullet;
 
 
@@ -35,8 +36,14 @@ public class GameScreen implements Screen {
         this.game = game;
         worldWidth = this.game.viewport.getWorldWidth();
         worldHeight = this.game.viewport.getWorldHeight();
+        asteroidTimer = 0f;
+        asteroids = new ArrayList<Asteroid>();
+        SetTextures();
+    }
+
+    private void SetTextures() {
         background = new Texture("background.png");
-        TextureAtlas atlas = new TextureAtlas("asteroids_atlas/pack.atlas");
+        atlas = new TextureAtlas("asteroids_atlas/pack.atlas");
         ship = new Sprite(atlas.findRegion("Ships/ship-a/ship-a1"));
         ship.setSize(1, 1);
         ship.setPosition(worldWidth / 2.0f, worldHeight / 2.0f);
@@ -57,31 +64,29 @@ public class GameScreen implements Screen {
     }
 
     private void input() {
-        float speed = 4f;
         float deltaTime = Gdx.graphics.getDeltaTime();
-        float rotateSpeed = 4f;
 
         Vector2 position = new Vector2(ship.getX(), ship.getY());
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            ship.rotate(rotateSpeed * -1);
+            ship.rotate(ROTATION_SPEED * -1);
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            ship.rotate(rotateSpeed);
+            ship.rotate(ROTATION_SPEED);
         } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             float radians = MathUtils.degreesToRadians * (ship.getRotation() + 90);
-            float dx = MathUtils.cos(radians) * speed * deltaTime;
-            float dy = MathUtils.sin(radians) * speed * deltaTime;
+            float dx = MathUtils.cos(radians) * SHIP_SPEED * deltaTime;
+            float dy = MathUtils.sin(radians) * SHIP_SPEED * deltaTime;
             position.add(dx, dy);
             ship.setPosition(position.x, position.y);
         }
-        transportObject(ship);
+        transportObject(ship, 0.5f);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             //TODO: fire
         }
     }
 
-    private void transportObject(Sprite object) {
-        float edgeOffset = 0.5f;
+    private void transportObject(Sprite object, float edgeOffset) {
+        edgeOffset = 0.5f;
         if (object.getX() >= worldWidth - edgeOffset)
             object.setX(-edgeOffset);
         if (object.getX() <= -(edgeOffset * 1.1)) {
@@ -95,11 +100,24 @@ public class GameScreen implements Screen {
     }
 
     private void logic() {
-        //TODO: spawn in asteroids
-        //TODO: transport asteroids from one edge to the other
+        createAsteroids();
         //TODO: collision with ship
         //TODO: collision with bullet
 
+    }
+
+    private void createAsteroids(){
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        asteroidTimer += deltaTime;
+        if (asteroidTimer > ASTEROID_SPAWNRATE){
+            Asteroid asteroid = new Asteroid(atlas);
+            asteroid.startMoving(worldWidth, worldHeight);
+            asteroids.add(asteroid);
+            asteroidTimer = 0f;
+        }
+        for(Asteroid a : asteroids){
+            a.move(ASTEROID_SPEED, deltaTime);
+        }
     }
 
     private void draw() {
@@ -109,6 +127,11 @@ public class GameScreen implements Screen {
         game.batch.draw(background, 0, 0, worldWidth, worldHeight);
         //draw text. Remember that x and y are in meters
         ship.draw(game.batch);
+        for (Asteroid a : asteroids)
+        {
+            transportObject(a.sprite, 1.5f);
+            a.sprite.draw(game.batch);
+        }
         game.batch.end();
     }
 
