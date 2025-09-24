@@ -28,7 +28,7 @@ public class Asteroid extends SpaceObject {
     private float direction;
 
 
-    public Asteroid(TextureAtlas atlas,float worldWidth, float worldHeight) {
+    public Asteroid(TextureAtlas atlas, float worldWidth, float worldHeight) {
         super();
         rnd = new Random();
         setInitialLocation(worldWidth, worldHeight);
@@ -90,20 +90,20 @@ public class Asteroid extends SpaceObject {
     public void setInitialLocation(float worldWidth, float worldHeight) {
         switch (rnd.nextInt(4)) {
             case 0:
-                initialX = 1f;
+                initialX = -1.5f;
                 initialY = rnd.nextFloat(worldHeight);
                 break;
             case 1:
                 initialX = rnd.nextFloat(worldWidth);
-                initialY = worldHeight - 1f;
+                initialY = worldHeight + 1.5f;
                 break;
             case 2:
-                initialX = worldWidth - 1f;
+                initialX = worldWidth + 1.5f;
                 initialY = rnd.nextFloat(worldHeight);
                 break;
             default:
                 initialX = rnd.nextFloat(worldWidth);
-                initialY = 1f;
+                initialY = -1.5f;
                 break;
         }
     }
