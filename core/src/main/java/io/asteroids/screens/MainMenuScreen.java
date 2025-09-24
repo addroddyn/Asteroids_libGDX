@@ -1,6 +1,7 @@
 package io.asteroids.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -30,7 +31,7 @@ public class MainMenuScreen implements Screen {
         game.font.draw(game.batch, "Click anywhere to begin!", 1, 1);
         game.batch.end();
 
-        if (Gdx.input.justTouched()){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()){
             game.setScreen(new GameScreen(game));
             dispose();
         }
