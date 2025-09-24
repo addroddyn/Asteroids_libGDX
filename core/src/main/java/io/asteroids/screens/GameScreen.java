@@ -63,24 +63,26 @@ public class GameScreen implements Screen {
         } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             ship.forward(deltaTime);
         }
-        transportObject(ship, 0.5f);
+        transportObject(ship);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             //TODO: fire
         }
     }
 
-    private void transportObject(SpaceObject object, float edgeOffset) {
+    private void transportObject(SpaceObject object) {
         Sprite sprite = object.getSprite();
-        if (sprite.getX() >= worldWidth - edgeOffset)
-            sprite.setX(-edgeOffset);
-        if (sprite.getX() <= -(edgeOffset * 1.1)) {
-            sprite.setX(worldWidth - edgeOffset);
+        if (sprite.getX() > worldWidth + sprite.getWidth())
+            sprite.setX(-sprite.getWidth());
+        if (sprite.getX() < -sprite.getWidth())  {
+            sprite.setX(worldWidth + sprite.getWidth());
         }
-        if (sprite.getY() >= worldHeight)
-            sprite.setY(-edgeOffset);
-        if (sprite.getY() <= -(edgeOffset * 1.1)) {
-            sprite.setY(worldHeight - edgeOffset);
+        if (sprite.getY() > worldHeight + sprite.getHeight())
+            sprite.setY(-sprite.getHeight());
+        if (sprite.getY() < -sprite.getHeight()) {
+            Gdx.app.log("x", "Leaving south, current position is: " + sprite.getY());
+            sprite.setY(worldHeight + sprite.getHeight());
+            Gdx.app.log("x", "Arriving north, current position is: " + sprite.getY());
         }
     }
 
@@ -112,7 +114,7 @@ public class GameScreen implements Screen {
         ship.draw(game.batch);
         for (Asteroid a : asteroids)
         {
-            transportObject(a, 1.5f);
+            transportObject(a);
             a.draw(game.batch);
         }
         game.batch.end();
