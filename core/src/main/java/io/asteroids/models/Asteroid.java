@@ -113,4 +113,9 @@ public class Asteroid extends SpaceObject {
         return direction;
     }
 
+    @Override
+    protected Vector2 getVelocity() {
+        return new Vector2(MathUtils.cos(direction), MathUtils.sin(direction)).scl(ASTEROID_SPEED);
+    }
+
 }

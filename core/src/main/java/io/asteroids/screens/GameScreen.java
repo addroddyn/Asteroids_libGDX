@@ -48,20 +48,20 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        input();
-        logic();
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        input(deltaTime);
+        logic(deltaTime);
         draw();
 
     }
 
-    private void input() {
-        float deltaTime = Gdx.graphics.getDeltaTime();
+    private void input(float deltaTime) {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             ship.rotate(true);
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             ship.rotate(false);
         } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            ship.forward(deltaTime);
+            ship.thrust(deltaTime);
         }
         transportObject(ship);
 
@@ -86,11 +86,19 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void logic() {
+    private void logic(float deltaTime) {
         createAsteroids();
+        moveStuff(deltaTime);
         //TODO: collision with ship
         //TODO: collision with bullet
 
+    }
+
+    private void moveStuff(float deltaTime) {
+        ship.move(deltaTime);
+        for(Asteroid a : asteroids){
+            a.move(deltaTime);
+        }
     }
 
     private void createAsteroids(){
@@ -100,9 +108,6 @@ public class GameScreen implements Screen {
             Asteroid asteroid = new Asteroid(atlas,worldWidth, worldHeight);
             asteroids.add(asteroid);
             asteroidTimer = 0f;
-        }
-        for(Asteroid a : asteroids){
-            a.forward(deltaTime);
         }
     }
 

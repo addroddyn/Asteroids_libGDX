@@ -1,9 +1,7 @@
 package io.asteroids.models;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class SpaceObject {
@@ -31,17 +29,13 @@ public abstract class SpaceObject {
         sprite.draw(batch);
     }
 
-    public void forward(float deltaTime) {
-        Vector2 position = new Vector2(sprite.getX(), sprite.getY());
-        Gdx.app.log(this.getClass().toString(), "initial position: " + position.x + ", " + position.y);
-        float dx = MathUtils.cos(getRadians()) * speed * deltaTime;
-        float dy = MathUtils.sin(getRadians()) * speed * deltaTime;
-        position.add(dx, dy);
-        sprite.setPosition(position.x, position.y);
-        Gdx.app.log(this.getClass().toString(), "radians: " + getRadians());
-        Gdx.app.log(this.getClass().toString(), "final position: " + sprite.getX() + ", " + sprite.getY());
+    public void move(float deltaTime) {
+        float newX = sprite.getX() + getVelocity().x * deltaTime;
+        float newY = sprite.getY() + getVelocity().y * deltaTime;
+        sprite.setPosition(newX, newY);
     }
 
     protected abstract float getRadians();
+    protected abstract Vector2 getVelocity();
 
 }
