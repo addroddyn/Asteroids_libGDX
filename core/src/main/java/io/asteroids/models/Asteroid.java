@@ -1,6 +1,7 @@
 package io.asteroids.models;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -8,11 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
 
-public class Asteroid {
-
-
-
-
+public class Asteroid extends SpaceObject {
     private enum AsteroidSize {
         SMALL,
         MEDIUM,
@@ -23,20 +20,25 @@ public class Asteroid {
     private final float SMALL_SPRITE_SIZE = 0.5f;
     private final float MID_SPRITE_SIZE = 1f;
     private final float BIG_SPRITE_SIZE = 1.5f;
-    private float direction;
+    private final float ASTEROID_SPEED = 2f;
     private Random rnd;
-    public Sprite sprite;
 
-    public Asteroid(TextureAtlas atlas) {
+    private float initialX;
+    private float initialY;
+    private float direction;
+
+
+    public Asteroid(TextureAtlas atlas,float worldWidth, float worldHeight) {
+        super();
         rnd = new Random();
+        setInitialLocation(worldWidth, worldHeight);
+        direction = MathUtils.degreesToRadians * (rnd.nextFloat(360f));
 
         this.size = rnd.nextBoolean() ? AsteroidSize.MEDIUM : AsteroidSize.BIG;
         if (size == AsteroidSize.BIG) {
-            sprite = new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3))));
-            sprite.setSize(BIG_SPRITE_SIZE, BIG_SPRITE_SIZE);
+            initialize(new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3)))), initialX, initialY, BIG_SPRITE_SIZE, ASTEROID_SPEED);
         } else {
-            sprite = new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3))));
-            sprite.setSize(MID_SPRITE_SIZE, MID_SPRITE_SIZE);
+            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), initialX, initialY, MID_SPRITE_SIZE, ASTEROID_SPEED);
         }
     }
 
@@ -44,16 +46,11 @@ public class Asteroid {
         rnd = new Random();
         this.size = size;
         if (size == AsteroidSize.BIG) {
-            sprite = new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3))));
-            sprite.setSize(BIG_SPRITE_SIZE, BIG_SPRITE_SIZE);
-        }
-        else if (size == AsteroidSize.MEDIUM) {
-            sprite = new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3))));
-            sprite.setSize(MID_SPRITE_SIZE, MID_SPRITE_SIZE);
-        }
-        else {
-            sprite = new Sprite(atlas.findRegion(getRandomSmallSprite(rnd.nextInt(3))));
-            sprite.setSize(SMALL_SPRITE_SIZE, SMALL_SPRITE_SIZE);
+            initialize(new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3)))), initialX, initialY, BIG_SPRITE_SIZE, ASTEROID_SPEED);
+        } else if (size == AsteroidSize.MEDIUM) {
+            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), initialX, initialY, MID_SPRITE_SIZE, ASTEROID_SPEED);
+        } else {
+            initialize(new Sprite(atlas.findRegion(getRandomSmallSprite(rnd.nextInt(3)))), initialX, initialY, SMALL_SPRITE_SIZE, ASTEROID_SPEED);
         }
     }
 
@@ -90,36 +87,30 @@ public class Asteroid {
         }
     }
 
-    public void startMoving(float worldWidth, float worldHeight) {
-        switch (rnd.nextInt(4)){
+    public void setInitialLocation(float worldWidth, float worldHeight) {
+        switch (rnd.nextInt(4)) {
             case 0:
-                sprite.setX(1f);
-                sprite.setY(rnd.nextFloat(worldHeight));
+                initialX = 1f;
+                initialY = rnd.nextFloat(worldHeight);
                 break;
             case 1:
-                sprite.setX(rnd.nextFloat(worldWidth));
-                sprite.setY(worldHeight -1f);
+                initialX = rnd.nextFloat(worldWidth);
+                initialY = worldHeight - 1f;
                 break;
             case 2:
-                sprite.setX(worldWidth -1f);
-                sprite.setY(rnd.nextFloat(worldHeight));
+                initialX = worldWidth - 1f;
+                initialY = rnd.nextFloat(worldHeight);
                 break;
             default:
-                sprite.setX(rnd.nextFloat(worldWidth));
-                sprite.setY(1f);
+                initialX = rnd.nextFloat(worldWidth);
+                initialY = 1f;
                 break;
         }
-
-
-        direction = MathUtils.degreesToRadians * (rnd.nextFloat(360f));
-
     }
-    public void move(float asteroidSpeed, float deltaTime) {
-        float dx = MathUtils.cos(direction) * asteroidSpeed * deltaTime;
-        float dy = MathUtils.sin(direction) * asteroidSpeed * deltaTime;
-        Vector2 position = new Vector2(sprite.getX(), sprite.getY());
-        position.add(dx, dy);
-        sprite.setPosition(position.x, position.y);
+
+    @Override
+    protected float getRadians() {
+        return direction;
     }
 
 }
