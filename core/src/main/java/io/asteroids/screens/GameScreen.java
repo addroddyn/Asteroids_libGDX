@@ -17,7 +17,7 @@ public class GameScreen implements Screen {
     private final float worldWidth;
     private final float worldHeight;
     private float asteroidTimer;
-    private final float ASTEROID_SPAWNRATE = 5f;
+    private float ASTEROID_SPAWNRATE = 5f;
     private final float FIRE_RATE = 0.2f;
     private float bulletTimer;
     private ArrayList<Asteroid> asteroids;
@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
         this.game = game;
         worldWidth = this.game.viewport.getWorldWidth();
         worldHeight = this.game.viewport.getWorldHeight();
-        asteroidTimer = 0f;
+        asteroidTimer = 3f;
         bulletTimer = FIRE_RATE + 1;
         asteroids = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -136,6 +136,7 @@ public class GameScreen implements Screen {
                     if (a.getSprite().getBoundingRectangle().overlaps(b.getSprite().getBoundingRectangle())) {
                         asteroidsToRemove.add(a);
                         bulletsToRemove.add(b);
+                        ASTEROID_SPAWNRATE -= 0.05f;
                         break;
                     }
                 }
