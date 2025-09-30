@@ -1,6 +1,6 @@
 
 pack.png
-size: 512, 64
+size: 256, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -27,44 +27,44 @@ Asteroids/big-c
   index: -1
 Asteroids/med-a
   rotate: false
-  xy: 152, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 152, 22
+  size: 29, 28
+  orig: 29, 28
   offset: 0, 0
   index: -1
 Asteroids/med-b
   rotate: false
-  xy: 202, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 212, 26
+  size: 27, 24
+  orig: 27, 24
   offset: 0, 0
   index: -1
 Asteroids/med-c
   rotate: false
-  xy: 252, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 183, 23
+  size: 27, 27
+  orig: 27, 27
   offset: 0, 0
   index: -1
 Asteroids/small-a
   rotate: false
-  xy: 302, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 170, 5
+  size: 16, 15
+  orig: 16, 15
   offset: 0, 0
   index: -1
 Asteroids/small-b
   rotate: false
-  xy: 352, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 152, 4
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 Asteroids/small-c
   rotate: false
-  xy: 402, 2
-  size: 48, 48
-  orig: 48, 48
+  xy: 188, 6
+  size: 15, 15
+  orig: 15, 15
   offset: 0, 0
   index: -1
 
