@@ -25,6 +25,8 @@ public class GameScreen implements Screen {
     TextureAtlas atlas;
     Texture background;
     Ship ship;
+    ArrayList<Asteroid> asteroidsToRemove = new ArrayList<>();
+    ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
 
 
     final Asteroids game;
@@ -97,12 +99,35 @@ public class GameScreen implements Screen {
         createAsteroids(deltaTime);
         moveStuff(deltaTime);
         checkForCollision();
+        removeAsteroids();
+        removeBullets();
+    }
 
+
+    private void removeAsteroids() {
+        for (Asteroid a : asteroidsToRemove) {
+            asteroids.remove(a);
+            if (a.getAsteroidSize().equals(AsteroidSize.BIG)) {
+                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
+                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
+                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
+            } else if (a.getAsteroidSize().equals(AsteroidSize.MEDIUM)) {
+                asteroids.add(new Asteroid(atlas, AsteroidSize.SMALL, a.getSprite().getX(), a.getSprite().getY()));
+                asteroids.add(new Asteroid(atlas, AsteroidSize.SMALL, a.getSprite().getX(), a.getSprite().getY()));
+            }
+        }
+        asteroidsToRemove = new ArrayList<>();
+    }
+
+    private void removeBullets() {
+        for (Bullet b : bulletsToRemove) {
+            bullets.remove(b);
+        }
+        bulletsToRemove = new ArrayList<>();
     }
 
     private void checkForCollision() {
-        ArrayList<Asteroid> asteroidsToRemove = new ArrayList<>();
-        ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+
         for (Asteroid a : asteroids) {
             if (a.getSprite().getBoundingRectangle().overlaps(ship.getSprite().getBoundingRectangle())) {
                 ship.getSprite().setPosition(1, 1);
@@ -116,21 +141,7 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        for (Asteroid a : asteroidsToRemove) {
-            asteroids.remove(a);
-            if (a.getAsteroidSize().equals(AsteroidSize.BIG)) {
-                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
-                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
-                asteroids.add(new Asteroid(atlas, AsteroidSize.MEDIUM, a.getSprite().getX(), a.getSprite().getY()));
-            } else if (a.getAsteroidSize().equals(AsteroidSize.MEDIUM)) {
-                asteroids.add(new Asteroid(atlas, AsteroidSize.SMALL, a.getSprite().getX(), a.getSprite().getY()));
-                asteroids.add(new Asteroid(atlas, AsteroidSize.SMALL, a.getSprite().getX(), a.getSprite().getY()));
 
-            }
-        }
-        for (Bullet b : bulletsToRemove) {
-            bullets.remove(b);
-        }
     }
 
     private void moveStuff(float deltaTime) {
@@ -141,6 +152,15 @@ public class GameScreen implements Screen {
         }
         for (Bullet b : bullets) {
             b.move(deltaTime);
+            float posX = b.getSprite().getX();
+            float posY = b.getSprite().getY();
+            if ((posX > worldWidth && posY > worldHeight) ||
+                (posX > worldWidth && posY < 0) ||
+                (posX < 0 && posY > worldHeight) ||
+                (posX < 0 && posY < 0)
+            ) {
+                bulletsToRemove.add(b);
+            }
         }
     }
 
