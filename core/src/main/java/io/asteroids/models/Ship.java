@@ -1,7 +1,7 @@
 package io.asteroids.models;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,7 +9,7 @@ public class Ship extends SpaceObject {
 
     private final float ROTATION_SPEED = 4f;
     private Vector2 velocity = new Vector2();
-    private float thrustPower = 2f;
+    private float thrustPower = 200f;
 
     public Ship(Sprite sprite, float posX, float posY, float size, float initialSpeed) {
         super();
@@ -40,5 +40,11 @@ public class Ship extends SpaceObject {
     @Override
     public Vector2 getVelocity() {
         return velocity;
+    }
+
+    public Bullet fire(TextureAtlas atlas, float size, float speed) {
+        Bullet bullet = new Bullet(atlas, getRadians(), getSprite().getX(), getSprite().getY(), size, speed);
+        bullet.getSprite().setRotation(getSprite().getRotation() + 90);
+        return bullet;
     }
 }

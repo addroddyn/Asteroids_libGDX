@@ -2,6 +2,7 @@ package io.asteroids.models;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class SpaceObject {
@@ -15,9 +16,10 @@ public abstract class SpaceObject {
     {
         this.sprite = sprite;
         this.sprite.setSize(size, size);
+        this.sprite.setOriginCenter();
         this.sprite.setX(posX);
         this.sprite.setY(posY);
-        this.sprite.setOrigin(size / 2f, size / 2f);
+        this.sprite.getBoundingRectangle().setSize(size);
         speed = initialSpeed;
     }
 
@@ -38,4 +40,7 @@ public abstract class SpaceObject {
     protected abstract float getRadians();
     protected abstract Vector2 getVelocity();
 
+    public void dispose(){
+        sprite.getTexture().dispose();
+    }
 }

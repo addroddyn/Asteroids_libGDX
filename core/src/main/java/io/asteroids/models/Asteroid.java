@@ -10,17 +10,11 @@ import java.util.Random;
 
 
 public class Asteroid extends SpaceObject {
-    private enum AsteroidSize {
-        SMALL,
-        MEDIUM,
-        BIG
-    }
-
     private AsteroidSize size;
-    private final float SMALL_SPRITE_SIZE = 0.5f;
-    private final float MID_SPRITE_SIZE = 1f;
-    private final float BIG_SPRITE_SIZE = 1.5f;
-    private final float ASTEROID_SPEED = 2f;
+    private final float SMALL_SPRITE_SIZE = 50f;
+    private final float MID_SPRITE_SIZE = 100f;
+    private final float BIG_SPRITE_SIZE = 200f;
+    private final float ASTEROID_SPEED = 200f;
     private Random rnd;
 
     private float initialX;
@@ -34,23 +28,25 @@ public class Asteroid extends SpaceObject {
         setInitialLocation(worldWidth, worldHeight);
         direction = MathUtils.degreesToRadians * (rnd.nextFloat(360f));
 
-        this.size = rnd.nextBoolean() ? AsteroidSize.MEDIUM : AsteroidSize.BIG;
+        this.size = rnd.nextBoolean() ? AsteroidSize.BIG : AsteroidSize.MEDIUM;
         if (size == AsteroidSize.BIG) {
             initialize(new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3)))), initialX, initialY, BIG_SPRITE_SIZE, ASTEROID_SPEED);
         } else {
-            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), initialX, initialY, MID_SPRITE_SIZE, ASTEROID_SPEED);
+            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), initialX, initialY, MID_SPRITE_SIZE,ASTEROID_SPEED);
         }
     }
 
-    public Asteroid(TextureAtlas atlas, AsteroidSize size) {
+    public Asteroid(TextureAtlas atlas, AsteroidSize size, float posX, float posY) {
+        super();
         rnd = new Random();
         this.size = size;
+        direction = MathUtils.degreesToRadians * (rnd.nextFloat(360f));
         if (size == AsteroidSize.BIG) {
-            initialize(new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3)))), initialX, initialY, BIG_SPRITE_SIZE, ASTEROID_SPEED);
+            initialize(new Sprite(atlas.findRegion(getRandomBigSprite(rnd.nextInt(3)))), posX, posY, BIG_SPRITE_SIZE, ASTEROID_SPEED);
         } else if (size == AsteroidSize.MEDIUM) {
-            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), initialX, initialY, MID_SPRITE_SIZE, ASTEROID_SPEED);
+            initialize(new Sprite(atlas.findRegion(getRandomMidSprite(rnd.nextInt(3)))), posX, posY, MID_SPRITE_SIZE, ASTEROID_SPEED);
         } else {
-            initialize(new Sprite(atlas.findRegion(getRandomSmallSprite(rnd.nextInt(3)))), initialX, initialY, SMALL_SPRITE_SIZE, ASTEROID_SPEED);
+            initialize(new Sprite(atlas.findRegion(getRandomSmallSprite(rnd.nextInt(3)))), posX, posY, SMALL_SPRITE_SIZE, ASTEROID_SPEED);
         }
     }
 
@@ -74,6 +70,10 @@ public class Asteroid extends SpaceObject {
             default:
                 return "Asteroids/med-c";
         }
+    }
+
+    public AsteroidSize getAsteroidSize(){
+        return this.size;
     }
 
     private String getRandomSmallSprite(Integer index) {

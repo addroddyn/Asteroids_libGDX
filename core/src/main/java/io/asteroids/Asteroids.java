@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.asteroids.screens.MainMenuScreen;
 
@@ -13,13 +14,15 @@ public class Asteroids extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public FitViewport viewport;
+    public ShapeRenderer renderer;
 
 
     public void create() {
         batch = new SpriteBatch();
+        renderer = new ShapeRenderer();
         // use libGDX's default font
         font = new BitmapFont();
-        viewport = new FitViewport(16, 9);
+        viewport = new FitViewport(1600, 900);
 
         //font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
         font.setUseIntegerPositions(false);
